@@ -5,7 +5,7 @@ A comprehensive AI-powered customer support chatbot with advanced features inclu
 
 ## Features
 
-- 🤖 **AI-Powered Responses** -  DeepSeek API
+- 🤖 **AI-Powered Responses** - openia or  DeepSeek API
 - 🔍 **Vector Search** - ChromaDB for intelligent knowledge retrieval
 - 📊 **Google Sheets Integration** - Sync knowledge base and log conversations
 - 🔗 **Webhook Support** - Real-time integrations with external systems
