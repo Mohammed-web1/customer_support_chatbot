@@ -34,7 +34,7 @@ pip install -r requirements.txt
 Update your `.env` file with actual values:
 
 ```env
-DEEPSEEK_API_KEY=sk-your-deepseek-key
+OPENIA_API_KEY=sk-your-openia-key
 GOOGLE_SHEETS_ID=your-google-sheet-id
 WEBHOOK_SECRET=your-webhook-secret
 ```
