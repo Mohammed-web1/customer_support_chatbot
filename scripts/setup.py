@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-'''
-Setup script for AI Customer Support Chatbot
-Run this script to initialize the system
-'''
+
 
 import os
 import sys
