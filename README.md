@@ -5,7 +5,7 @@ A comprehensive AI-powered customer support chatbot with advanced features inclu
 
 ## Features
 
-- 🤖 **AI-Powered Responses** - openia or  DeepSeek API
+- 🤖 **AI-Powered Responses** -   DeepSeek API
 - 🔍 **Vector Search** - ChromaDB for intelligent knowledge retrieval
 - 📊 **Google Sheets Integration** - Sync knowledge base and log conversations
 - 🔗 **Webhook Support** - Real-time integrations with external systems
@@ -19,8 +19,8 @@ A comprehensive AI-powered customer support chatbot with advanced features inclu
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd ai-customer-support-chatbot
+git clone https://github.com/Mohammed-web1/customer_support_chatbot.git
+cd customer_support_chatbot
 
 # Run setup script
 python scripts/setup.py
@@ -34,7 +34,7 @@ pip install -r requirements.txt
 Update your `.env` file with actual values:
 
 ```env
-OPENIA_API_KEY=sk-your-openia-key
+DEEPSEEK_API_KEY=your_deepseek_api_key_here
 GOOGLE_SHEETS_ID=your-google-sheet-id
 WEBHOOK_SECRET=your-webhook-secret
 ```
@@ -173,13 +173,12 @@ The system uses ChromaDB for semantic search:
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| OPENAI_API_KEY | OpenAI API key | Yes* |
 | DEEPSEEK_API_KEY | DeepSeek API key | Yes* |
 | GOOGLE_SHEETS_ID | Google Sheet ID | Yes |
 | WEBHOOK_SECRET | Webhook signature secret | No |
 | DATABASE_URL | Database connection string | No |
 
-*Either OpenAI or DeepSeek key is required
+* DeepSeek key is required
 
 ## Testing
 
