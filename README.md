@@ -1,4 +1,4 @@
-# customer-support-chatbot
+
 # AI Customer Support Chatbot
 
 A comprehensive AI-powered customer support chatbot with advanced features including vector search, webhook integration, and Google Sheets synchronization.
