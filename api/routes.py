@@ -16,13 +16,12 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Initialize components
-llm_manager = LLMManager()  # Now using only DeepSeek
+
 vector_manager = VectorStoreManager()
 sheets_integration = GoogleSheetsIntegration()
 webhook_handler = WebhookHandler()
 
-# Pydantic models
+
 class ChatMessage(BaseModel):
     message: str
     session_id: Optional[str] = None
@@ -39,13 +38,10 @@ class KnowledgeBaseUpdate(BaseModel):
 
 @router.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(chat_message: ChatMessage, db: Session = Depends(get_db)):
-    '''Handle chat messages'''
+
     try:
-        # Generate session ID if not provided
         session_id = chat_message.session_id or str(uuid.uuid4())
         user_id = chat_message.user_id or "anonymous"
-        
-        # Get or create conversation
         conversation = db.query(Conversation).filter(
             Conversation.session_id == session_id
         ).first()
@@ -59,11 +55,9 @@ async def chat_endpoint(chat_message: ChatMessage, db: Session = Depends(get_db)
             db.commit()
             db.refresh(conversation)
         
-        # Get relevant context from vector store
         relevant_docs = vector_manager.similarity_search(chat_message.message, k=3)
         context = "\n".join([doc.page_content for doc in relevant_docs])
         
-        # Get conversation history
         recent_messages = db.query(Message).filter(
             Message.conversation_id == conversation.id
         ).order_by(Message.timestamp.desc()).limit(10).all()
@@ -74,15 +68,13 @@ async def chat_endpoint(chat_message: ChatMessage, db: Session = Depends(get_db)
                 conversation_history.append({"user": msg.content, "assistant": ""})
             elif msg.message_type == "assistant" and conversation_history:
                 conversation_history[-1]["assistant"] = msg.content
-        
-        # Generate response
+
         response_data = llm_manager.generate_response(
             user_message=chat_message.message,
             context=context,
             conversation_history=conversation_history
         )
         
-        # Save messages to database
         user_message_obj = Message(
             conversation_id=conversation.id,
             message_type="user",
@@ -101,7 +93,7 @@ async def chat_endpoint(chat_message: ChatMessage, db: Session = Depends(get_db)
         db.add(assistant_message_obj)
         db.commit()
         
-        # Log to Google Sheets
+
         try:
             sheets_integration.log_conversation({
                 "session_id": session_id,
@@ -127,7 +119,7 @@ async def chat_endpoint(chat_message: ChatMessage, db: Session = Depends(get_db)
 
 @router.post("/webhook")
 async def webhook_endpoint(request: Request):
-    '''Handle incoming webhooks'''
+
     try:
         result = await webhook_handler.handle_webhook(request)
         return JSONResponse(content=result)
@@ -139,12 +131,11 @@ async def webhook_endpoint(request: Request):
 
 @router.post("/knowledge-base/update")
 async def update_knowledge_base(kb_update: KnowledgeBaseUpdate, db: Session = Depends(get_db)):
-    '''Update knowledge base'''
+
     try:
-        # Update vector store
+
         vector_manager.update_knowledge_base(kb_update.documents)
-        
-        # Update Google Sheets
+
         sheets_integration.update_knowledge_base(kb_update.documents)
         
         return {"status": "success", "message": f"Updated {len(kb_update.documents)} documents"}
@@ -155,13 +146,13 @@ async def update_knowledge_base(kb_update: KnowledgeBaseUpdate, db: Session = De
 
 @router.get("/knowledge-base/sync")
 async def sync_knowledge_base():
-    '''Sync knowledge base from Google Sheets'''
+
     try:
-        # Fetch data from Google Sheets
+
         kb_data = sheets_integration.get_knowledge_base_data()
         
         if kb_data:
-            # Update vector store
+
             vector_manager.update_knowledge_base(kb_data)
             
             return {
@@ -177,7 +168,7 @@ async def sync_knowledge_base():
 
 @router.get("/conversations/{session_id}")
 async def get_conversation(session_id: str, db: Session = Depends(get_db)):
-    '''Get conversation history'''
+
     try:
         conversation = db.query(Conversation).filter(
             Conversation.session_id == session_id
