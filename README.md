@@ -231,9 +231,4 @@ gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker
 
 MIT License - see LICENSE file for details
 
-## Support
 
-For support and questions:
-- Check the API documentation at `/docs`
-- Review the logs in the `logs/` directory
-- Open an issue on GitHub
