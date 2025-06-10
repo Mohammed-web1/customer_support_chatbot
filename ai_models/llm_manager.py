@@ -13,7 +13,6 @@ class LLMManager:
         self.setup_prompts()
         
     def setup_deepseek(self):
-        """Setup DeepSeek API"""
         self.api_key = Config.DEEPSEEK_API_KEY
         self.base_url = Config.DEEPSEEK_BASE_URL
         self.model = Config.DEEPSEEK_MODEL
@@ -22,7 +21,6 @@ class LLMManager:
             raise ValueError("DEEPSEEK_API_KEY is required")
     
     def setup_prompts(self):
-        """Setup prompt templates"""
         self.system_prompt_template = '''
 You are an AI customer support assistant. Your role is to help customers with their inquiries in a friendly, professional, and helpful manner.
 
@@ -65,19 +63,19 @@ Previous Conversation:
     ) -> Dict[str, Any]:
         """Generate response using DeepSeek API"""
         try:
-            # Format conversation history
+           
             history_text = ""
             if conversation_history:
-                for msg in conversation_history[-5:]:  # Last 5 messages
+                for msg in conversation_history[-5:]:  
                     history_text += f"User: {msg.get('user', '')}\nAssistant: {msg.get('assistant', '')}\n"
             
-            # Create system message with context
+        
             system_message = self.system_prompt_template.format(
                 context=context,
                 history=history_text
             )
             
-            # Prepare the request
+           
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
@@ -100,7 +98,7 @@ Previous Conversation:
                 "stream": False
             }
             
-            # Make API request
+            
             response = requests.post(
                 f"{self.base_url}/chat/completions",
                 headers=headers,
@@ -116,7 +114,7 @@ Previous Conversation:
                     
                     return {
                         "response": response_content,
-                        "confidence": 0.8,  # Default confidence for DeepSeek
+                        "confidence": 0.8,  
                         "tokens_used": result.get("usage", {}),
                         "model": self.model
                     }
@@ -150,7 +148,7 @@ Previous Conversation:
                 "Content-Type": "application/json"
             }
             
-            # Test with a simple request
+            
             payload = {
                 "model": self.model,
                 "messages": [
